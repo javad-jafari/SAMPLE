@@ -23,6 +23,8 @@ install requierments from req.text :
 pip install -r requierment.text
 ```
 
+**make sure your Redis Container is up.**
+
 run celery and celery beat and redis (use as a broker )
 
 ```
@@ -59,13 +61,14 @@ brokers , rabbitmq ,...
 have to touch a .env file in root of proj and set these data :
 
  - CELERY_BROKER_URL
+```
 optional :
-CELERY_RESULT_BACKEND
-CELERY_ACCEPT_CONTENT
-CELERY_TASK_SERIALIZER
-CELERY_RESULT_SERIALIZER
-CELERY_TIMEZONE 
-
+ - CELERY_RESULT_BACKEND
+ - CELERY_ACCEPT_CONTENT
+ - CELERY_TASK_SERIALIZER
+ - CELERY_RESULT_SERIALIZER
+ - CELERY_TIMEZONE 
+```
 ## issues or pull requests
 
 if you're going to make it better , you can do this .
