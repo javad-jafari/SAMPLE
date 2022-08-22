@@ -1,3 +1,4 @@
+from django.shortcuts import get_object_or_404
 from django.core.cache.backends.base import DEFAULT_TIMEOUT
 from otp.operator import SendMCI, SendIrancell
 from rest_framework import serializers
@@ -55,3 +56,38 @@ class SendOTPSerializers(serializers.Serializer):
             return 1
         elif re.match(iran, phone):
             return 2 
+
+
+
+
+
+
+
+class VerifyOTPSerializers(serializers.Serializer):
+
+    code = serializers.CharField()
+    phone = serializers.CharField()
+
+
+    def validate(self,data):
+
+        if int(data["code"]) not in range(1000,9999):
+            raise serializers.ValidationError("code is invalid")
+        
+        return data
+
+
+    def create(self, validated_data):
+        
+        user = get_object_or_404(
+            User, 
+            phone=validated_data["phone"]
+            )
+            
+        send_code=validated_data["code"]
+        cache.set("code{}".format(user.id) ,send_code,timeout=CACHE_TTL)
+        cached_code=cache.get("code{}".format(user.id)).split()[0]
+
+        if int(cached_code)==int(send_code):
+            return 1
+        return 0

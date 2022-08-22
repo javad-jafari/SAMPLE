@@ -27,20 +27,20 @@ class LoginView(KnoxLoginView):
     permission_classes = (permissions.AllowAny,)
 
     def post(self, request, format=None):
+
         serializer = AuthTokenSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
+
         user = serializer.validated_data['user']
+
         login(request, user)
+        
         knox_token = super(LoginView, self).post(request,format=None)
 
-        user_id=request.user.id
-        digest=knox_token.data.get("digest")
-        agent=request.META['HTTP_USER_AGENT'].split()[1]
-
         login_token_agent_task.delay(
-            user_id=user_id, 
-            digest=digest, 
-            agent=agent
+            user_id=request.user.id,
+            digest=knox_token.data.get("digest"),
+            agent=request.META['HTTP_USER_AGENT'].split()[1]
             )
             
         return knox_token
