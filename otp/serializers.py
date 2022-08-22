@@ -83,9 +83,8 @@ class VerifyOTPSerializers(serializers.Serializer):
             User, 
             phone=validated_data["phone"]
             )
-            
+
         send_code=validated_data["code"]
-        cache.set("code{}".format(user.id) ,send_code,timeout=CACHE_TTL)
         cached_code=cache.get("code{}".format(user.id)).split()[0]
 
         if int(cached_code)==int(send_code):
