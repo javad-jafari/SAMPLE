@@ -1,3 +1,4 @@
+from django.shortcuts import get_object_or_404
 from rest_framework.views import APIView
 from rest_framework import generics
 from user.models import User,LoginToken
@@ -18,10 +19,15 @@ from knox.views import LogoutAllView as KnoxLogoutAllView
 from user.task import login_token_agent_task
 
 
-class RegisterAPI(generics.CreateAPIView):
+
+
+class RegisterAPI(generics.CreateAPIView, KnoxLoginView):
+
     permission_classes = [permissions.AllowAny]
     queryset = User.objects.all()
     serializer_class = RegisterSerializer
+
+
 
 class LoginView(KnoxLoginView):
     permission_classes = (permissions.AllowAny,)
@@ -34,7 +40,7 @@ class LoginView(KnoxLoginView):
         user = serializer.validated_data['user']
 
         login(request, user)
-        
+
         knox_token = super(LoginView, self).post(request,format=None)
 
         login_token_agent_task.delay(

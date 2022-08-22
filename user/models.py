@@ -3,8 +3,30 @@ from django.contrib.auth.models import PermissionsMixin
 from django.contrib.auth.base_user import AbstractBaseUser
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.base_user import BaseUserManager
+from django.core.exceptions import ValidationError
 from knox.models import AuthToken
+import re
 
+
+def password_validator(value):
+    passwd = 'Geek12@'
+    reg = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!#%*?&]{6,20}$"
+      
+    # compiling regex
+    pat = re.compile(reg)
+      
+    # searching regex                 
+    mat = re.search(pat, passwd)
+    if mat:
+        raise ValidationError(
+            _('%(value)s must include numbers, chars, signs'),
+            params={'value': value},
+        )        
+    elif len(value) < 5 :
+        raise ValidationError(
+            _('%(value)s should be more than 5 digit'),
+            params={'value': value},
+        )
 
 class UserManager(BaseUserManager):
     use_in_migrations = True
@@ -35,8 +57,9 @@ class UserManager(BaseUserManager):
         return self._create_user(username, phone, password, **extra_fields)
 
 class User(AbstractBaseUser, PermissionsMixin):
-    username = models.CharField(_('usernme'), max_length=100,unique=True)
-    phone = models.CharField(_('phone'), max_length=11)
+    password = models.CharField(_('password'), max_length=128, validators=[password_validator])
+    username = models.CharField(_('username'), max_length=100,unique=True)
+    phone = models.CharField(_('phone'), max_length=11,unique=True)
 
     is_staff = models.BooleanField(
         _('staff status'),

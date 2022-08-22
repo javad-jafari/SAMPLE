@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
+from re import match
 
 
 User = get_user_model()
@@ -19,17 +20,21 @@ class RegisterSerializer(serializers.ModelSerializer):
         }
     
     def validate(self,data):
+        valid_phones = "(0|\+98)?([ ]|-|[()]){0,2}9[0|1|2|3]([ ]|-|[()]){0,2}(?:[0-9]([ ]|-|[()]){0,2}){8}"
+
+        if not match(valid_phones, data["phone"]):
+            raise serializers.ValidationError("enter a valid phone nimber")
 
         if data["password"] != data["confirm_password"]:
             raise serializers.ValidationError("Password confirme is incorrect")
 
-        if len(data["password"]) < 5:
-            raise serializers.ValidationError("password len must be bigger than 5")
+        
+
         return data
 
     def create(self, validated_data):
-        password = validated_data.pop('password',None)
-        validated_data.pop('confirm_password',None)
+        password = validated_data.pop('password')
+        validated_data.pop('confirm_password')
         instance = self.Meta.model(**validated_data)
 
         if password is not None:
