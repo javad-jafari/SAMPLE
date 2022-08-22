@@ -1,14 +1,15 @@
-from unittest import result
-from django.conf import settings
 from django.core.cache.backends.base import DEFAULT_TIMEOUT
-from django.core.cache import cache
+from otp.operator import SendMCI, SendIrancell
 from rest_framework import serializers
+from django.conf import settings
+from django.core.cache import cache
 from user.models import User
 from random import randint
-from operator_send import SendMCI, SendIrancell
 import re
 
 CACHE_TTL = getattr(settings, 'CACHE_TTL', DEFAULT_TIMEOUT)
+
+
 
 
 class SendOTPSerializers(serializers.Serializer):
@@ -32,16 +33,18 @@ class SendOTPSerializers(serializers.Serializer):
         user = User.objects.get(phone=validated_data["phone"])
         code = randint(1000,9999)
         result = "{} {}".format(code,user.id)
-        cache.set(result,timeout=CACHE_TTL)
+        cache.set("code{}".format(user.id) ,result,timeout=CACHE_TTL)
 
         operator_path=self.find_operator(validated_data["phone"])
 
         if operator_path==1:
-            SendMCI.sms_sender()
-        elif operator_path==2:
-            SendIrancell.sms_sender()
+            SendMCI().sms_sender()
 
-        return user
+        elif operator_path==2:
+            SendIrancell().sms_sender()
+
+
+        return operator_path
 
 
     def find_operator(self,phone):

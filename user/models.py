@@ -1,13 +1,8 @@
-from lib2to3.pgen2 import token
 from django.db import models
 from django.contrib.auth.models import PermissionsMixin
 from django.contrib.auth.base_user import AbstractBaseUser
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.base_user import BaseUserManager
-from rest_framework.authtoken.models import Token
-
-from django.db.models.signals import post_save
-from django.dispatch import receiver
 from knox.models import AuthToken
 
 
@@ -71,6 +66,9 @@ class LoginToken(models.Model):
     agent = models.CharField(max_length=2000)
     digest = models.ForeignKey(AuthToken, on_delete=models.CASCADE)
     
+
+    def __str__(self) -> str:
+        return self.agent
 
 
 

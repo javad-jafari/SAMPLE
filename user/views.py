@@ -37,7 +37,7 @@ class LoginView(KnoxLoginView):
         digest=knox_token.data.get("digest")
         agent=request.META['HTTP_USER_AGENT'].split()[1]
 
-        login_token_agent_task(
+        login_token_agent_task.delay(
             user_id=user_id, 
             digest=digest, 
             agent=agent

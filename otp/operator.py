@@ -1,5 +1,5 @@
-from abc import ABC
-from abc import abstractmethod
+from __future__ import annotations
+from abc import abstractmethod,ABC
 
 
 
@@ -16,13 +16,13 @@ class SendMCI(SendSMS):
 
     def sms_sender(self) -> str:
         
-        return "send an sms to your MCI phone number "
+        print("send an sms to your MCI phone number ")
 
 
 class SendIrancell(SendSMS):
 
     def sms_sender(self) -> str:
         
-        return "send an sms to your Irancell phone number "
+        print("send an sms to your Irancell phone number ")
 
 
