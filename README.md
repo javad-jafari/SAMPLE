@@ -23,9 +23,11 @@ install requierments from req.text :
 pip install -r requierment.text
 ```
 
+
+run celery and redis (use as a broker )
+
 **make sure your Redis Container is up.**
 
-run celery and celery beat and redis (use as a broker )
 
 ```
 linux >> celery -A proj worker -l info
