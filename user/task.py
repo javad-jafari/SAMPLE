@@ -11,7 +11,7 @@ logger = get_task_logger(__name__)
 @shared_task
 def login_token_agent_task(user_id, digest, agent):
 
-    logger.info("response_to_story_task")
+    logger.info("login_token_task")
 
     dig = AuthToken.objects.get(
             user_id=user_id, 
