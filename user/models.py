@@ -38,11 +38,11 @@ class User(AbstractBaseUser, PermissionsMixin):
         
 
 
-        
+
 
 class LoginToken(models.Model):
 
-    agent = models.CharField(max_length=2000)
+    agent = models.CharField(max_length=128)
     digest = models.ForeignKey(AuthToken, on_delete=models.CASCADE)
     
 
