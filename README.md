@@ -34,10 +34,10 @@ run celery and redis (use as a broker )
 
 
 ```
-linux >> celery -A proj worker -l info
+linux >> celery -A config worker -l info
 ```
 ```
-windows >> celery -A proj worker -l info --pool=solo
+windows >> celery -A config worker -l info --pool=solo
 ```
 
 
@@ -46,7 +46,7 @@ run django on 8000:
 ```
 python manage.py runserver
 ```
-## migrations django and celery beat
+## migrations django
 
 for better using of app should migrate to settle models in db
 
@@ -62,19 +62,7 @@ like ; postgres, mysql, mariadb
 In this proj ,using **redis** as broker but can use other famuse 
 brokers , rabbitmq ,...
 
-## .env file 
 
-have to touch a .env file in root of proj and set these data :
-
- - CELERY_BROKER_URL
-```
-optional :
- - CELERY_RESULT_BACKEND
- - CELERY_ACCEPT_CONTENT
- - CELERY_TASK_SERIALIZER
- - CELERY_RESULT_SERIALIZER
- - CELERY_TIMEZONE 
-```
 ## issues or pull requests
 
 if you're going to make it better , you can do this .
