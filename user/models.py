@@ -2,7 +2,7 @@ from django.db import models
 from django.contrib.auth.models import PermissionsMixin
 from django.contrib.auth.base_user import AbstractBaseUser
 from django.utils.translation import ugettext_lazy as _
-from user.validators import password_validator
+from user.validators import password_validator, phone_validator
 from user.managers import UserManager
 from knox.models import AuthToken
 
@@ -12,7 +12,7 @@ from knox.models import AuthToken
 class User(AbstractBaseUser, PermissionsMixin):
     password = models.CharField(_('password'), max_length=128, validators=[password_validator])
     username = models.CharField(_('username'), max_length=100,unique=True)
-    phone = models.CharField(_('phone'), max_length=11,unique=True)
+    phone = models.CharField(_('phone'), max_length=11,unique=True, validators=[phone_validator])
 
     is_staff = models.BooleanField(
         _('staff status'),

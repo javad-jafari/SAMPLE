@@ -20,10 +20,6 @@ class RegisterSerializer(serializers.ModelSerializer):
         }
     
     def validate(self,data):
-        valid_phones = "(0|\+98)?([ ]|-|[()]){0,2}9[0|1|2|3]([ ]|-|[()]){0,2}(?:[0-9]([ ]|-|[()]){0,2}){8}"
-
-        if not match(valid_phones, data["phone"]):
-            raise serializers.ValidationError("enter a valid phone nimber")
 
         if data["password"] != data["confirm_password"]:
             raise serializers.ValidationError("Password confirme is incorrect")

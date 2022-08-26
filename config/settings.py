@@ -36,10 +36,11 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework',
+    'password',
+    'knox',
     'user',
     'otp',
-    'rest_framework',
-    'knox',
 ]
 
 MIDDLEWARE = [
@@ -163,6 +164,7 @@ CELERY_TASK_SERIALIZER = 'json'
 
 # regex patterns
 
-PHONE_PATTERN = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!#%*?&]{6,20}$"
+PHONE_PATTERN = "(0|\+98)?([ ]|-|[()]){0,2}9[0|1|2|3]([ ]|-|[()]){0,2}(?:[0-9]([ ]|-|[()]){0,2}){8}"
 MCI_PATTERN = "(0|\+98)?([ ]|-|[()]){0,2}9[9|1|]([ ]|-|[()]){0,2}(?:[0-9]([ ]|-|[()]){0,2}){8}"
 IRANCELL_PATTERN = "(0|\+98)?([ ]|-|[()]){0,2}9[3|0|]([ ]|-|[()]){0,2}(?:[0-9]([ ]|-|[()]){0,2}){8}"
+PASSWORD_PATTERN = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!#%*?&]{6,20}$"

@@ -1,13 +1,13 @@
 from django.utils.translation import ugettext_lazy as _
 from django.core.exceptions import ValidationError
-from config.settings import PHONE_PATTERN
+from config.settings import PASSWORD_PATTERN, PHONE_PATTERN
 import re
 
 
 def password_validator(value):
 
     # compiling regex
-    pat = re.compile(PHONE_PATTERN)
+    pat = re.compile(PASSWORD_PATTERN)
       
     # searching regex                 
     mat = re.search(pat, value)
@@ -21,3 +21,19 @@ def password_validator(value):
             _('%(value)s should be more than 5 '),
             params={'value': value},
         )
+
+
+
+
+def phone_validator(value):
+
+    # compiling regex
+    pat = re.compile(PHONE_PATTERN)
+      
+    # searching regex                 
+    mat = re.search(pat, value)
+    if not mat:
+        raise ValidationError(
+            _('please enter a valid phone number')
+            
+        ) 
