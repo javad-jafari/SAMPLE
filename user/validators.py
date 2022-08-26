@@ -1,13 +1,13 @@
 from django.utils.translation import ugettext_lazy as _
 from django.core.exceptions import ValidationError
+from config.settings import PHONE_PATTERN
 import re
 
 
 def password_validator(value):
-    reg = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!#%*?&]{6,20}$"
-      
+
     # compiling regex
-    pat = re.compile(reg)
+    pat = re.compile(PHONE_PATTERN)
       
     # searching regex                 
     mat = re.search(pat, value)

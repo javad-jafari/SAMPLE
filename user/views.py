@@ -21,11 +21,14 @@ from user.task import login_token_agent_task
 
 
 
-class RegisterAPI(generics.CreateAPIView, KnoxLoginView):
+class RegisterAPI(generics.CreateAPIView):
 
     permission_classes = [permissions.AllowAny]
     queryset = User.objects.all()
     serializer_class = RegisterSerializer
+
+
+
 
 
 

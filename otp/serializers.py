@@ -6,6 +6,7 @@ from django.conf import settings
 from django.core.cache import cache
 from user.models import User
 from random import randint
+from config.settings import IRANCELL_PATTERN, MCI_PATTERN
 import re
 
 CACHE_TTL = getattr(settings, 'CACHE_TTL', DEFAULT_TIMEOUT)
@@ -49,12 +50,10 @@ class SendOTPSerializers(serializers.Serializer):
 
 
     def find_operator(self,phone):
-        mci = "(0|\+98)?([ ]|-|[()]){0,2}9[9|1|]([ ]|-|[()]){0,2}(?:[0-9]([ ]|-|[()]){0,2}){8}"
-        iran = "(0|\+98)?([ ]|-|[()]){0,2}9[3|0|]([ ]|-|[()]){0,2}(?:[0-9]([ ]|-|[()]){0,2}){8}"
 
-        if re.match(mci, phone):
+        if re.match(MCI_PATTERN, phone):
             return 1
-        elif re.match(iran, phone):
+        elif re.match(IRANCELL_PATTERN, phone):
             return 2 
 
 
