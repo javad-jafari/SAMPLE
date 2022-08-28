@@ -5,9 +5,17 @@
 project consist of two main apps:
  - user
  - otp
+ - knox
+ - password
+ - listoken
 
-user app handle register, login, logout
-otp app handle send otp, (verify otp)
+**user app handle register, login, logout**
+**otp app handle send otp, (verify otp)**
+**knox as a third party added for auth and token and modify it for user-agent**
+**password is for forget and change password**
+**listoken is used to show list of valid token per user and remove it by user**
+
+
 
 # install and using app
 
@@ -20,7 +28,7 @@ source venv/bin/activate
 
 install requierments from req.text :
 ```
-pip install -r requierment.text
+pip install -r requierment
 ```
 
 **if you would like to migrate models , notice that knox package**

@@ -73,15 +73,3 @@ class LogoutAllView(KnoxLogoutAllView):
         logout(request)
         return super(LogoutAllView, self).post(request, format=None)
 
-
-
-
-
-class HelloAPI(APIView):
-
-    permission_classes = [permissions.IsAuthenticated]
-    authentication_classes = [TokenAuthentication]
-
-    def get(self, request, format=None):
-
-        return Response("hello world")
