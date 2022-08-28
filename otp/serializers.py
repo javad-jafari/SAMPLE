@@ -71,9 +71,6 @@ class VerifyOTPSerializers(serializers.ModelSerializer):
 
 
     def create(self, validated_data):
-
-        agent = self.context
-
         
         user = get_object_or_404(
             User, 

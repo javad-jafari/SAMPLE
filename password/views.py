@@ -5,7 +5,7 @@ from user.models import User
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from knox.auth import TokenAuthentication
 from password.serializers import ChangePasswordSerializer, ForgetPasswordSerializer
-
+from knox.models import AuthToken
 
 
 
@@ -20,6 +20,11 @@ class ChangePasswordView(generics.UpdateAPIView):
     def get_object(self, queryset=None):
         return self.request.user
 
+    def update(self, request, *args, **kwargs):
+        super().update(request, *args, **kwargs)
+        user = self.get_object()
+        token = AuthToken.objects.create(user, self.request.META['HTTP_USER_AGENT'])
+        return Response({ "token": token[1]})
 
 
 class ForgetPassword(generics.UpdateAPIView):

@@ -10,8 +10,10 @@ from knox.models import AuthToken
 from otp.throttles import OtpRateThrottle
 
 
+
+
 class SendOTPAPI(APIView):
-    
+
     throttle_classes = [OtpRateThrottle]
 
     def post(self, request, format=None):
