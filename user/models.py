@@ -4,7 +4,6 @@ from django.contrib.auth.base_user import AbstractBaseUser
 from django.utils.translation import ugettext_lazy as _
 from user.validators import password_validator, phone_validator
 from user.managers import UserManager
-from knox.models import AuthToken
 
 
 
@@ -37,17 +36,6 @@ class User(AbstractBaseUser, PermissionsMixin):
         verbose_name_plural = _('users')
         
 
-
-
-
-class LoginToken(models.Model):
-
-    agent = models.CharField(max_length=128)
-    digest = models.ForeignKey(AuthToken, on_delete=models.CASCADE)
-    
-
-    def __str__(self) -> str:
-        return self.agent
 
 
 

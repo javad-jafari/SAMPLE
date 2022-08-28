@@ -1,8 +1,7 @@
 import site
 from django.contrib import admin
-from user.models import User,LoginToken
+from user.models import User
 
 
 
 admin.site.register(User)
-admin.site.register(LoginToken)

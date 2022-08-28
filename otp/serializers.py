@@ -1,11 +1,10 @@
 from django.shortcuts import get_object_or_404
 from django.core.cache.backends.base import DEFAULT_TIMEOUT
-from otp.operator import SendMCI, SendIrancell
 from rest_framework import serializers
 from django.conf import settings
 from django.core.cache import cache
+from otp.tasks import send_otp_task
 from user.models import User
-from random import randint
 from config.settings import IRANCELL_PATTERN, MCI_PATTERN
 import re
 
@@ -33,18 +32,9 @@ class SendOTPSerializers(serializers.Serializer):
     def create(self, validated_data):
         
         user = User.objects.get(phone=validated_data["phone"])
-        code = randint(1000,9999)
-        result = "{} {}".format(code,user.id)
-        cache.set("code{}".format(user.id) ,result,timeout=CACHE_TTL)
-
         operator_path=self.find_operator(validated_data["phone"])
 
-        if operator_path==1:
-            SendMCI().sms_sender()
-
-        elif operator_path==2:
-            SendIrancell().sms_sender()
-
+        send_otp_task.delay(user.id, operator_path)
 
         return operator_path
 

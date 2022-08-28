@@ -1,14 +1,12 @@
 from django.shortcuts import get_object_or_404
 from rest_framework.views import APIView
 from rest_framework import generics
-from user.models import User,LoginToken
+from user.models import User
 from rest_framework import permissions
 from user.serializers import RegisterSerializer
 from rest_framework.response import Response
 from rest_framework import status
 from knox.auth import TokenAuthentication
-
-
 from django.contrib.auth import login,logout
 from knox.models import AuthToken
 from rest_framework import permissions
@@ -16,7 +14,7 @@ from rest_framework.authtoken.serializers import AuthTokenSerializer
 from knox.views import LoginView as KnoxLoginView
 from knox.views import LogoutView as KnoxLogoutView
 from knox.views import LogoutAllView as KnoxLogoutAllView
-from user.task import login_token_agent_task
+
 
 
 
@@ -27,7 +25,12 @@ class RegisterAPI(generics.CreateAPIView):
     queryset = User.objects.all()
     serializer_class = RegisterSerializer
 
-
+    def post(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        user = serializer.save()
+        token = AuthToken.objects.create(user, self.request.META['HTTP_USER_AGENT'])
+        return Response({ "token": token[1]})
 
 
 
@@ -42,17 +45,10 @@ class LoginView(KnoxLoginView):
 
         user = serializer.validated_data['user']
 
-        login(request, user)
 
-        knox_token = super(LoginView, self).post(request,format=None)
+        token = AuthToken.objects.create(user, self.request.META['HTTP_USER_AGENT'])
+        return Response({ "token": token[1] })
 
-        login_token_agent_task.delay(
-            user_id=request.user.id,
-            digest=knox_token.data.get("digest"),
-            agent=request.META['HTTP_USER_AGENT'].split()[1]
-            )
-            
-        return knox_token
 
 
 class LogoutView(KnoxLogoutView):

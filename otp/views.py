@@ -5,9 +5,9 @@ from otp.serializers import SendOTPSerializers, VerifyOTPSerializers
 from rest_framework import status
 from rest_framework import permissions
 from knox.views import LoginView as KnoxLoginView
-from django.contrib.auth import login
 from user.models import User
-from user.task import login_token_agent_task
+from knox.models import AuthToken
+
 
 
 class SendOTPAPI(APIView):
@@ -22,6 +22,8 @@ class SendOTPAPI(APIView):
 
             return Response(status=status.HTTP_200_OK)
         return Response(status=status.HTTP_400_BAD_REQUEST)
+
+
 
 
 class VerifyOTPAPI(KnoxLoginView):
@@ -41,17 +43,12 @@ class VerifyOTPAPI(KnoxLoginView):
                     User, 
                     phone=serializer.validated_data["phone"]
                     )
-
-                login(request, user)
                 
-                knox_token = super(VerifyOTPAPI, self).post(request,format=None)
-
-                login_token_agent_task.delay(
-                    user_id=request.user.id, 
-                    digest=knox_token.data.get("digest"), 
-                    agent=request.META['HTTP_USER_AGENT'].split()[1]
+                token = AuthToken.objects.create(
+                    user, self.request.META['HTTP_USER_AGENT']
                     )
                     
-                return knox_token
-            return Response(status=status.HTTP_400_BAD_REQUEST)
+                return Response({ "token": token[1] })
+                
+            return Response(status=status.HTTP_408_REQUEST_TIMEOUT)
         return Response(status=status.HTTP_400_BAD_REQUEST)

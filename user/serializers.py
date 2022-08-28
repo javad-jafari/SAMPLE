@@ -1,6 +1,5 @@
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
-from re import match
 
 
 User = get_user_model()
@@ -39,9 +38,4 @@ class RegisterSerializer(serializers.ModelSerializer):
 
         return instance
 
-
-class LoginSerializer(serializers.Serializer):
-
-    username = serializers.CharField()
-    password = serializers.CharField()
 
