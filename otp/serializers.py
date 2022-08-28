@@ -3,6 +3,7 @@ from django.core.cache.backends.base import DEFAULT_TIMEOUT
 from rest_framework import serializers
 from django.conf import settings
 from django.core.cache import cache
+from knox.models import AuthToken
 from otp.tasks import send_otp_task
 from user.models import User
 from config.settings import IRANCELL_PATTERN, MCI_PATTERN
@@ -52,21 +53,27 @@ class SendOTPSerializers(serializers.Serializer):
 
 
 
-class VerifyOTPSerializers(serializers.Serializer):
+class VerifyOTPSerializers(serializers.ModelSerializer):
 
     code = serializers.CharField()
     phone = serializers.CharField()
 
+    class Meta:
+        model = AuthToken
+        fields = ('code', 'phone')
 
     def validate(self,data):
 
         if int(data["code"]) not in range(1000,9999):
-            raise serializers.ValidationError("code is invalid")
+            raise serializers.ValidationError({"otp":"code is invalid"})
         
         return data
 
 
     def create(self, validated_data):
+
+        agent = self.context
+
         
         user = get_object_or_404(
             User, 
@@ -74,8 +81,13 @@ class VerifyOTPSerializers(serializers.Serializer):
             )
 
         send_code=validated_data["code"]
-        cached_code=cache.get("code{}".format(user.id)).split()[0]
+
+        try :
+            cached_code=cache.get("code{}".format(user.id)).split()[0]
+        except:
+            raise serializers.ValidationError({"otp": "code is expired"})
 
         if int(cached_code)==int(send_code):
             return 1
-        return 0
+        raise serializers.ValidationError({"otp":"code is invalid"})
+        
