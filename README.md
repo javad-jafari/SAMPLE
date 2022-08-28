@@ -31,10 +31,6 @@ install requierments from req.text :
 pip install -r requierment
 ```
 
-**if you would like to migrate models , notice that knox package**
-**maybe has a problem, dont worry just comment digest field in**
-**LoginToken model in user app then migrate after complete it**
-**uncomment digest and migrate it again.**
 
 run celery and redis (use as a broker )
 
