@@ -1,7 +1,5 @@
-from celery import shared_task,current_task
-import celery
 from celery.utils.log import get_task_logger
-from otp.operator import SendMCI, SendIrancell
+from otp.operator import FactorySMS
 from random import randint
 from django.core.cache import cache
 from django.conf import settings
@@ -20,13 +18,6 @@ def send_otp_task(self, user_id, operator_path):
     cache.set("code{}".format(user_id) ,result,timeout=CACHE_TTL)
 
     try:
-        if operator_path==1:
-            SendMCI().sms_sender()
-
-        elif operator_path==2:
-            SendIrancell().sms_sender()
-
-        return "send"
-
+        return FactorySMS().get_sms(operator_path).sms_sender()
     except:
         app.control.revoke(self.request.id, terminate=True)

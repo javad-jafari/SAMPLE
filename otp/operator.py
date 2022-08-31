@@ -26,3 +26,13 @@ class SendIrancell(SendSMS):
         print("send an sms to your Irancell phone number ")
 
 
+
+class FactorySMS:
+
+    @staticmethod
+    def get_sms(type):
+
+        if type==1:
+            return SendMCI()
+        elif type==2:
+            return SendIrancell()
